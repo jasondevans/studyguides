@@ -3,7 +3,7 @@
 ## Basic Program
 
 ### C++
-```C++
+```cpp
 #include <iostream>
 using std::cin;
 using std::cout;
@@ -15,7 +15,7 @@ int main(int argc, char** argv)
 ```
 
 ### Java
-```Java
+```java
 package com.mydomain;
 public class MyClass
 {
@@ -26,8 +26,8 @@ public class MyClass
 }
 ```
 
-### C#
-```C#
+### C\#
+```csharp
 using System;
 class MyClass
 {
@@ -39,7 +39,7 @@ class MyClass
 ```
 
 ### Javascript
-```Javascript
+```javascript
 console.log("Hello world!\n");
 ```
 
