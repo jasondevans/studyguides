@@ -119,7 +119,7 @@ and you can also do `foreach (KeyValuePair<TK,TV> kv in d)`.
 
 ## String Manipulation
 
-# The Stack and the Heap
+## The Stack and the Heap
 
 ### C# 
 Local variables (value or reference) are created on the stack, however,
