@@ -14,8 +14,8 @@ int main(int argc, char** argv)
 }
 ```
 
-\begin{minted}{java}
-//Java
+### Java
+```Java
 package com.mydomain;
 public class MyClass
 {
@@ -24,10 +24,10 @@ public class MyClass
         System.out.println("Hello world!!");
     }
 }
-\end{minted}
+```
 
-\begin{minted}{csharp}
-//C#
+### C#
+```C#
 using System;
 class MyClass
 {
@@ -36,14 +36,14 @@ class MyClass
         Console.WriteLine("Hello World!!");
     }
 }
-\end{minted}
+```
 
-\begin{minted}{js}
-// Javascript
+### Javascript
+```Javascript
 console.log("Hello world!\n");
-\end{minted}
+```
 
-\section{Types}
+## Types
 
 C\#: Value types: signed integer (sbyte, short, int, long), unsigned integer 
 (byte, ushort, uint, ulong), real (float, double, decimal), logical (bool), 
