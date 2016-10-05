@@ -67,6 +67,7 @@ when you do not know the type.
 
 ### C++
 
+In C++, array size must be known at compile time, so size must be a constant expression.
 
 ### C# 
 Arrays are created with the new keyword, e.g. `int[] myarr = new int[33];`.
@@ -80,16 +81,64 @@ false. Arrays have a Length property.
 In C++, initialization and assignment are conceptually different things.  Also, "declaration" and 
 "definition" are conceptually different (but can happen at the same time).
 
+#### Object / class variable initialization
+Object/class variables are always initialized when they are defined, whether or not explicit
+initialization is given, and regardless of whether they are defined at block scope or outside
+of any block.  If no explicit initialization is given, then the no-arg constructor is called. 
+If no constructors are explicitly defined, the compiler-generated default synthesized constructor
+will be called.  If there is no no-arg constructor, or if it is not accessible, this is an error.
+Any member variables of object / class type follow this same process when the object is defined.
+Elements of containers of object / class type follow this same process when container is defined.
+Elements of an array that are not explicitly initialized follow this same process when the array
+is defined.
+
+#### Built-in / primitive type initialization
+Built-in / primitive typed variables that are defined outside of any block, as well as static
+variables (of built-in or primitive type) that are defined at block scope, and which do not have
+explicit initialization are "value initialized" to 0 or false.  This includes when a container
+(such as vector) is defined without explicit initialization for its elements -- they are value
+initialized.  For arrays that are defined in block scope, there is no
+
 #### Default initialization
-This happens when a variable is defined without an initializer. Outside of any function, built-in types
-are default initialized to zero.  Inside a function (local variable), built-in typed variables are not 
-default initialized and are undefined, except for static locals, which are default initialized.  Objects
-without explicit initializers are always default initialized by calling the no-arg constructor, if there isn't
-one or it is not accessible, this is an error (and explicit intialization must be given).
+"Default initialization" means that all objects will be initialized with no-arg constructor,
+built-in / primitive types and array elements will either be undefined (non-static block scope)
+or "value initialized" (outside of block or static in-block).
+
+#### Value initialization
+"Value initialization" means that all objects will be initialized with no-arg constructor,
+built-in / primitive types and array elements will be assigned 0 or false.
 
 #### List initialization
 ```cpp
-int myint{4}
+int myint{4}; // (A)
+int myint = {4}; // Equivalent to A
+vector<int> vec{1, 2, 3}; // (B)
+vector<int> vec = {1, 2, 3}; // Equivalent to B
+```
+
+#### Copy initialization
+```cpp
+std::string mystr = "hello"; // Copy initialization
+MyClass myobj; // Default initialization (no-arg constructor)
+MyClass myobj2 = myobj; // Copy initialization (copy assignment operator)
+MyClass myobj3(myobj); // Copy initialization (copy constructor)
+int myint = 4;
+```
+
+#### Direct initialization
+```cpp
+std::string mystr("hello");
+int myint(4);
+```
+
+#### Aggregate initialization
+```cpp
+struct MyAggregate // all members public, no initializers, no constructors, no inheritance
+{
+	int mem1;
+	string mem2;
+}
+MyAggregate myagg = { 4, "hello" };
 ```
 
 ### C# 
