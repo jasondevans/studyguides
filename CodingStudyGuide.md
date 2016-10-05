@@ -45,15 +45,28 @@ console.log("Hello world!\n");
 
 ## Types
 
+### C++
+* Primitive boolean: bool
+* Primitive charaacter: char (8 bits), wchar_t (16+), char16_t (16), char32_t (32)
+* Primitive integer: short(16+), int(16+), long(32+), long long(32+); can prefix with "unsigned"
+* Primitive floating: float(32+), double(64+), long double (96/128+)
+* Fixed length integer types (in <cstdint>): int8_t, int16_t, int32_t, int64_t, uint8_t, uint16_t,
+uint32_t, uint64_t.  These are optional, if directly supported by an implementation.  They are in the
+std namespace.
+
 ### C# 
-Value types: signed integer (sbyte, short, int, long), unsigned integer 
+* Value types: signed integer (sbyte, short, int, long), unsigned integer 
 (byte, ushort, uint, ulong), real (float, double, decimal), logical (bool), 
-character (char), as well as struct and enum types.  Reference types: all 
+character (char), as well as struct and enum types.
+* Reference types: all 
 class, array, delegate, and interface types -- including string and object.
-You can also use the var keyword to have the compiler deduce the type, or 
+You can also use the "var" keyword to have the compiler deduce the type, or 
 when you do not know the type.
 
 ## Arrays
+
+### C++
+
 
 ### C# 
 Arrays are created with the new keyword, e.g. `int[] myarr = new int[33];`.
@@ -61,6 +74,23 @@ When an array is created, it is default initialized, e.g. with 0 / null /
 false. Arrays have a Length property.
 
 ## Initialization
+
+### C++
+
+In C++, initialization and assignment are conceptually different things.  Also, "declaration" and 
+"definition" are conceptually different (but can happen at the same time).
+
+#### Default initialization
+This happens when a variable is defined without an initializer. Outside of any function, built-in types
+are default initialized to zero.  Inside a function (local variable), built-in typed variables are not 
+default initialized and are undefined, except for static locals, which are default initialized.  Objects
+without explicit initializers are always default initialized by calling the no-arg constructor, if there isn't
+one or it is not accessible, this is an error (and explicit intialization must be given).
+
+#### List initialization
+```cpp
+int myint{4}
+```
 
 ### C# 
 Local variable are not default initialized, but the compiler enforces
