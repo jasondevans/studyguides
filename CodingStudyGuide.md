@@ -170,10 +170,17 @@ foreach (char c in "beer")
 
 ## Access
 
+### C++
+In C++, members of `struct` are public by default, and members of `class` are private by default.
+
 ### C# 
 In C\#, members are private by default.
 
 ## Equality and Comparison
+
+### C++
+In C++, == and != are by default not defined for objects, but you can overload these and the relational
+operators to provide that functionality.  For example, these are overloaded for `string`.
 
 ### C# 
 In C\#, == and != perform value comparison for value types (always). By 
@@ -183,12 +190,45 @@ comparison.
 
 ## Function parameters
 
+### C++
+In C++, by default all parameters are passed by value.  For primitive types, this is a straightforward
+copy.  For arrays, a copy of the pointer to the first element is passed.  For class types, the copy
+constructor is called to create the copy.  To pass by reference, indicate that the parameter is a 
+reference (with &).
+
 ### C# 
 In C\#, by default all parameters are passed by value.  However, the ref
 and out keywords indicate pass by reference, and must be included both at
 the function definition, and at the function call.
 
-## Collections
+## Collections / Containers
+
+### C++ 
+* Sequential containers include: vector, deque, list, forward_list, array, string
+* Associative containers include: map, set, multimap, multiset (and unordered versions)
+* `vector` is the most popular  
+
+Basic `vector` methods include:
+* `size()`: number of elements
+* `begin()`: iterator to first element
+* `end()`: iterator to one past last element
+* [Prepend 'c' to get const iterators, 'r' for reverse, 'cr' for both]
+* `push_back(element)`: append element
+* `push_front(element)`: prepend element
+* `myvec[n]`: reference to element at position n
+* `insert(args)`: insert element at specific position
+* `empty()`: whether there are no elements
+
+Examples:
+```cpp
+vector<int> myvec;  // Empty vector
+vector<int> myvec { 1, 2, 3 }; // or = { 1, 2, 3 }
+for (auto iter = myvec.begin(); iter != myvec.end(); iter++) // old-school way to do it
+{
+	*iter += 10;
+}
+for (auto &elem : myvec) elem += 10; // easier way to do it -- make sure you use a reference, or you'll get a copy
+```
 
 ### C# 
 There are generic and nongeneric versions of collections and interfaces.
