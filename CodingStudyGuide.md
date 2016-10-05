@@ -154,6 +154,15 @@ char[] vowels = {'a', 'e', 'i', 'o', 'u'};
 
 ## Range For
 
+### C++
+```cpp
+std::string mystr("hello");
+for (char c : mystr) {} // or, for (auto c : mystry)
+std::vector<int> myvec { 1, 2, 3, 4 };
+for (auto elem : myvec) {} // elem takes on copies of the elements in myvec
+for (auto &elem : myvec) {} // elem takes on references to the elements in myvec (and can modify them)
+```
+
 ### C# 
 ```csharp
 foreach (char c in "beer")
