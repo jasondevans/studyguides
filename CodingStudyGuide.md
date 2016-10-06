@@ -247,6 +247,26 @@ and you can also do `foreach (KeyValuePair<TK,TV> kv in d)`.
 
 ## String Manipulation
 
+### C++
+C++ inherits C's null-terminated character array format for strings, but prefers its own `std::string` type.
+Equality and relational operators are overloaded to compare string values.  Strings can be concatenated with +.
+Strings are not immutable.  There are many issues around strings and encodings -- char sizes are implementation-
+dependent, most string methods are unaware of UTF-8, and string indexing could land in the middle of a code point
+and/or not correspond to number of characters.
+```cpp
+using std::string;
+using std::cout;
+using std::cin;
+using std::endl;
+string s = "hello";
+cout << s << endl;
+cin >> s; // Read in a whitespace-separated string
+getLine(cin, s);  // Read in a full line
+s.empty();
+s.size();  // length of the string
+char c = s[0]; // individual character by index
+```
+
 ### C# 
 In C#, `char`'s are natively stored as 16-bit UTF-16 values. String type is `string`, which is a reference
 type.  Operators == and != are overridden to do value comparison (ordinal).  You can access individual characters (as
@@ -255,12 +275,58 @@ long as they fit in a single 16-bit character) with [] indexing.  Some useful st
 
 ## The Stack and the Heap
 
+### C++
+C++ does not require there to even be a stack or heap, but in practice, local variables are created on the stack
+and variables initialized with `new` are created on the heap.  Individual classes can control internal memory
+allocation however they want, for example, `vector` typically stores its elements on the heap, even if it's 
+header information is on the stack.  Arrays with `new` are created on the heap, otherwise they are on the stack.
+
 ### C# 
 Local variables (value or reference) are created on the stack, however,
 the contents of the reference (the objects) are created on the heap.  Static
 variables are also created on the heap and are never garbage collected.
 
+## Pointers / References
+
 ## OO / Inheritance
+
+### C++
+In C++, there are many details, too much to discuss fully here.  Here are some examples:
+```cpp
+class MyTestClass
+{
+public:
+	MyTestClass() : myint(0), mystr("") {}  // Constructor with initializations
+	MyTestClass(int paramint, string paramstr) : myint(paramint), mystr(paramstr) {} // Constructor with args
+	MyTestClass(const MyTestClass& rhs) : myint(rhs.myint), mystr(rhs.mystr) {} // Copy constructor
+	MyTestClass& operator=(const MyTestClass& rhs) {  // Copy assignment operator
+		myint = rhs.myint; mystr = rhs.mystr; return *this; }
+	virtual void printme() const {  // Member function
+		std::cout << "myint is " << myint << ", mystr is " << mystr << endl; }
+	virtual ~MyTestClass() { } // Destructor
+private:
+	int myint;
+	string mystr;
+};
+
+class MySubClass : public MyTestClass
+{
+public:
+	MySubClass() : MyTestClass(), mydbl(0.0)  {}  // Constructor with initializations
+	MySubClass(int paramint, string paramstr, double paramdbl)  // Constructor with args
+		: MyTestClass(paramint, paramstr), mydbl(paramdbl) {}
+	MySubClass(const MySubClass& rhs)  // Copy constructor
+		: MyTestClass(rhs), mydbl(rhs.mydbl) {} 
+	MySubClass& operator=(const MySubClass& rhs) {  // Copy assignment operator
+		MyTestClass::operator=(rhs); mydbl = rhs.mydbl; return *this; }
+	virtual void printme() const {  // Member function
+		MyTestClass::printme();
+		std::cout << "mydbl = " << mydbl << endl; }
+	virtual ~MySubClass() { } // Destructor
+private:
+	double mydbl;
+};
+```
 
 ### C# 
 Inheritance: `public class DerivedClass : BaseClass {}`. Methods must 
@@ -308,7 +374,7 @@ signal to proceed.  The difference between these two is that `AutoResetEvent` au
 after `Set()` is called, only allowing one thread to proceed, whereas `ManualResetEvent` stays "open"
 for all threads, until manually closed again.
 
-## Function Pointers / Delegates / Functions as Objects
+## Function Pointers / Delegates / Functions as Objects / Callable Objects
 
 ### C# 
 Delegates:
@@ -342,7 +408,7 @@ x => x * 3; // if the type of x can be inferred and there is exactly one paramet
 C#'s lambdas are full closures, which have dynamic access to enclosing variables, which are evaluated at 
 execution time, not definition time, and which can be updated inside the lambda.
 
-## Generics
+## Generics / Templates
 
 ### C# 
 No template keyword, types can be primitive / value types, not limited to reference types.
