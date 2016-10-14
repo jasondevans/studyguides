@@ -120,8 +120,9 @@ vector<int> vec = {1, 2, 3}; // Equivalent to B
 ```cpp
 std::string mystr = "hello"; // Copy initialization
 MyClass myobj; // Default initialization (no-arg constructor)
-MyClass myobj2 = myobj; // Copy initialization (copy assignment operator)
+MyClass myobj2 = myobj; // Copy initialization (copy constructor)
 MyClass myobj3(myobj); // Copy initialization (copy constructor)
+myobj2 = myobj3;  // Copy initialization (copy assignment operator)
 int myint = 4;
 ```
 
@@ -339,6 +340,9 @@ an interface with `interface` keyword.
 ## IO and Streams
 
 ## Concurrency and Asynchrony
+
+### C++
+
 
 ### C# 
 Create and run a basic thread with:
