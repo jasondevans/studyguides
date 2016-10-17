@@ -97,7 +97,8 @@ Built-in / primitive typed variables that are defined outside of any block, as w
 variables (of built-in or primitive type) that are defined at block scope, and which do not have
 explicit initialization are "value initialized" to 0 or false.  This includes when a container
 (such as vector) is defined without explicit initialization for its elements -- they are value
-initialized.  For arrays that are defined in block scope, there is no
+initialized.  For arrays that are defined in block scope without explicit initialization, there
+is no initialization performed (I believe).
 
 #### Default initialization
 "Default initialization" means that all objects will be initialized with no-arg constructor,
@@ -414,6 +415,10 @@ for all threads, until manually closed again.
 
 ## Function Pointers / Delegates / Functions as Objects / Callable Objects
 
+### C++
+C++ has a number of callable objects: functions, pointers to functions, types with the call operator `()`
+overloaded, and lambdas.
+
 ### C# 
 Delegates:
 ```csharp
@@ -435,6 +440,17 @@ int ninevar = afunc(3);
 
 ## Lambdas / Closures
 
+### C++
+Example C++ lambda:
+```cpp
+auto mylambda = [] (int x) { return x * 3; };
+```
+You can capture local non-static variables by placing them in the `[]`, can capture either
+by value or by reference.  Values are captured at the time the lambda is defined, not when 
+it is executed.  For any captured references, you must make sure that the referred to variable
+is still alive when the lambda is executed (unlike in C#, where referred to variables will have
+their lifetime extended to as long as needed, even if they are local and have gone out of scope).
+
 ### C# 
 In C#, lambda's are created with:
 ```csharp
@@ -448,6 +464,22 @@ execution time, not definition time, and which can be updated inside the lambda.
 
 ## Generics / Templates
 
+### C++
+There are function templates and class templates:
+```cpp
+// Function template definition
+template <typename T> T myTemplateFn(T param1, T param2) { /* do something... */ return param1; };
+// Then later...
+myTemplateFn(4, 5);  // Compiler infers type.
+myTemplateFn<int>(4, 5);  // Explicitly indicate type.
+
+// Class template definition
+template <typename T> class MyTemplateClass { public: T data; };
+// Then later...
+MyTemplateClass<int> mtc;
+mtc.data = 7;
+```
+
 ### C# 
 No template keyword, types can be primitive / value types, not limited to reference types.
 ```csharp
@@ -459,3 +491,5 @@ public class MyGen<T>
 }
 MyGen<int> mygenint = new MyGen<int>();
 ```
+
+## Values, References, Pointers, Memory Management, Garbage Collection
