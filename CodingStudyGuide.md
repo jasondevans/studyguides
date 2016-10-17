@@ -375,7 +375,7 @@ lock guard such as `std::lock_guard`, which uses RAII to ensure that the mutex i
 the lock guard goes out of scope, even if an exception is thrown.  You can also use `std::unique_lock`,
 which has all the functionality of `lock_guard` but also allows you to explicitly lock and unlock the
 mutex manually.  Condition variables, `std::condition_variable` have methods `wait()`, `notify_one()`,
-and `notify_all()`.  Finally, there are atomics, with `std::atomic<type>`, which methods `store()`
+and `notify_all()`.  Finally, there are atomics, with `std::atomic<type>`, with methods `store()`
 and `load()`.
 
 ### C# 
