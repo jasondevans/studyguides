@@ -342,7 +342,41 @@ an interface with `interface` keyword.
 ## Concurrency and Asynchrony
 
 ### C++
-
+"High level", attempt to run a task on another thread via async / futures:
+```cpp
+#include <string>
+#include <iostream>
+#include <future>
+#include <thread>
+int main(int argc, char** argv)
+{
+	// May or may not actually start another thread here, depending on platform capabilities.
+	std::future<int> myResult { std::async([](int val) { return val * 2; } , 6) };
+	// ... do other work here.
+	// Next line gets result if completed, or waits for completion, or starts thread synchronously
+    // if unable to start asynchronously above.  If an exception was thrown, calling get() rethrows the
+	// exception here. 
+	cout << "Result is " << myResult.get() << endl; 
+}
+```
+"Lower level", starting a thread directly:
+```cpp
+int result = 0;
+// Of course, not typically the best way to return a value; you must handle inter-thread communication
+std::thread t{ [&result](int val) {result = val * 2; }, 6 }; 
+// ... do something else here (not using result)
+t.join();
+cout << "Result is " << result;
+```
+Also, you can use `promise` to return results and exceptions from one thread to another.
+Also, there are mutexes, which can be locked and unlocked, particularly `std::mutex` (standard
+mutex) and `std::recursive_mutex` (reentrant mutex).  Typically, you will use these with a
+lock guard such as `std::lock_guard`, which uses RAII to ensure that the mutex is unlocked when
+the lock guard goes out of scope, even if an exception is thrown.  You can also use `std::unique_lock`,
+which has all the functionality of `lock_guard` but also allows you to explicitly lock and unlock the
+mutex manually.  Condition variables, `std::condition_variable` have methods `wait()`, `notify_one()`,
+and `notify_all()`.  Finally, there are atomics, with `std::atomic<type>`, which methods `store()`
+and `load()`.
 
 ### C# 
 Create and run a basic thread with:
