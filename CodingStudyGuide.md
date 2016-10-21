@@ -43,6 +43,27 @@ class MyClass
 console.log("Hello world!\n");
 ```
 
+## Console input / output
+
+### C# 
+Console input/output uses the `System.Console` class.  There are two properties that represent standard
+input and output -- `Console.In` (standard input stream as a `System.IO.TextReader`), and `Console.Out`
+(standard output stream as a `System.IO.TextWriter`).  These two properties can be used directly, but
+typically, methods defined directly in the `Console` class are called.  In particular, 
+`Console.ReadLine()` reads one line, or `null` if no more lines are available.  `Console.Write()` and
+`Console.WriteLine()` write to standard output, with many arguments -- typically with a `string`, but
+there are overloads that accept many different types to write out.
+
+## Parsing and Conversions
+
+### C# 
+```csharp
+int i = int.Parse("1234"); // Throws an exception if not a valid int.
+bool success = int.TryParse("1234", out i); // Returns false if conversion failed.
+bool b = bool.Parse("True");
+double d = double.Parse("1.234"); // etc.
+```
+
 ## Types
 
 ### C++
@@ -274,6 +295,31 @@ In C#, `char`'s are natively stored as 16-bit UTF-16 values. String type is `str
 type.  Operators == and != are overridden to do value comparison (ordinal).  You can access individual characters (as
 long as they fit in a single 16-bit character) with [] indexing.  Some useful string methods include 
 `StartsWith`, `Substring`, and `Replace`.  `CompareTo` perfoms "culture-sensitive" (non-ordinal) comparison.
+```csharp
+string s1 = "Hello world!\n"; // Create a string
+string s2 = @"Hello \n\r\t\\hello she said ""hi""."; // Verbatim string, no escape characters except "" for double quote.
+int x = 5;
+string s3 = $"The value is {x}."; // Interpolated string, any expression inside braces.
+string s4 = new string(s1); // string constructor.
+bool isStringEmpty = "".Empty; // True
+int strLen = s1.Length; // String length.
+bool isPrefix = "12345".StartsWith("12"); // True
+int patternLoc = s1.IndexOf("world"); // 6
+patternLoc = s1.IndexOf("o", 5); // 7, index of pattern starting at specified index
+string helloStr = "Hello world!".Substring(0, 5); // "hello"
+string remainderStr = "Hello world!".Substring(5); // " world!"
+string insertedStr = "onethree".Insert(3, "two"); // "onetwothree"
+string trimStr = "     \tWhat up  \r\n\t  ".Trim(); // "What up"
+string[] indivWords = "one two three".Split(); // { "one", "two", "three" }
+indivWords = "one&two|three".Split("|", '&'); // { "one", "two", "three" }
+string backTogether = indivWords.Join("--"); // "one--two--three"
+bool areSame = "one" == "one"; // True
+int compareResult = "James".CompareTo("Jim"); // -1
+compareResult = "James".CompareTo("James"); // 0
+StringBuilder sb = new StringBuilder(); // Create new string builder
+sb.Append("one"); sb.Append(" two");
+string builtStr = sb.ToString(); // "one two"
+```
 
 ## The Stack and the Heap
 
