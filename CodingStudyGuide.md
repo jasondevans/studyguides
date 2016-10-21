@@ -93,7 +93,17 @@ In C++, array size must be known at compile time, so size must be a constant exp
 ### C# 
 Arrays are created with the new keyword, e.g. `int[] myarr = new int[33];`.
 When an array is created, it is default initialized, e.g. with 0 / null /
-false. Arrays have a Length property.
+false. Arrays have a Length property. Arrays implicitly inherit from the `System.Array` 
+class. Arrays themselves are of reference type.
+```csharp
+int[] intArr = new int[10];
+int length = intArr.Length; // 10
+Console.Write(intArr[4]); // 0 -- arrays are default initialized to 0 / false / null
+intArr = new int[] { 2, 4, 6 };  // Initialization
+intArr = { 2, 4, 6 }; // Initialization
+int[,] myMultiArr = new int[10,10]; // two-dimensional array
+Array.ForEach(intArr, Console.Write); // Writes "246", uses single-param Action delegate
+```
 
 ## Initialization
 
@@ -224,7 +234,7 @@ In C\#, by default all parameters are passed by value.  However, the ref
 and out keywords indicate pass by reference, and must be included both at
 the function definition, and at the function call.
 
-## Collections / Containers
+## Collections / Containers / Data Structures
 
 ### C++ 
 * Sequential containers include: vector, deque, list, forward_list, array, string
@@ -267,6 +277,49 @@ LinkedList, Stack, Queue, HashSet,
 and SortedSet. Then there is `Dictionary<TKey,TValue>`, 
 which has methods Add(key, value), ContainsKey(key), ContainsValue(value), 
 and you can also do `foreach (KeyValuePair<TK,TV> kv in d)`.
+```csharp
+// List:
+List<int> numbers = new List<int>();
+numbers.Add(2);
+numbers.Add(6);
+numbers.Add(8);
+numbers.Insert(1, 4);
+numbers.AddRange(new[] {10, 12});
+numbers.Reverse();
+numbers.ForEach(Console.Write); // 12108642
+int[] numArr = numbers.ToArray();
+
+// LinkedList:
+LinkedList<string> myList = new LinkedList<string>();
+
+// Queue:
+var myQueue = new Queue<int>();
+myQueue.Enqueue(3); myQueue.Enqueue(14); myQueue.Enqueue(15);
+Console.WriteLine(myQueue.Count); // 3
+Console.WriteLine(myQueue.Peek()); // 3
+Console.WriteLine(myQueue.Dequeue()); // 3
+Console.WriteLine(myQueue.Dequeue()); // 14
+
+// Stack:
+// Uses Push(), Peek(), and Pop()
+
+// HashSet and SortedSet:
+// Have Contains(), Add(), and Remove() methods, etc.
+// Can contain no duplicates, silently do nothing if attempts to add duplicates are made
+
+// Dictionary:
+var dt = new Dictionary<string, int>();
+dt.Add("purple", 3);
+dt["orange"] = 7;
+Console.Write(dt.ContainsKey("purple")); // true
+Console.Write(dt.ContainsValue(5)); // false
+int result = 0;
+bool found = dt.TryGetValue("orange", out result);
+foreach(string s in dt.Keys) {}
+foreach(int i in dt.Values) {}
+foreach(KeyValuePair<string, int> kv in dt) 
+	Console.WriteLine(kv.Key + ": " + kv.Value);
+```
 
 ## String Manipulation
 
