@@ -311,7 +311,9 @@ string remainderStr = "Hello world!".Substring(5); // " world!"
 string insertedStr = "onethree".Insert(3, "two"); // "onetwothree"
 string trimStr = "     \tWhat up  \r\n\t  ".Trim(); // "What up"
 string[] indivWords = "one two three".Split(); // { "one", "two", "three" }
-indivWords = "one&two|three".Split("|", '&'); // { "one", "two", "three" }
+indivWords = "one&two|three".Split('|', '&'); // { "one", "two", "three" }
+indivWords = "one50two90three".Split(new string[] { "50", "60", "70", "80", "90" }, 
+    StringSplitOptions.RemoveEmptyEntries); // { "one", "two", "three" }
 string backTogether = indivWords.Join("--"); // "one--two--three"
 bool areSame = "one" == "one"; // True
 int compareResult = "James".CompareTo("Jim"); // -1
