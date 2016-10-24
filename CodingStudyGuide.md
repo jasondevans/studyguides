@@ -514,6 +514,69 @@ signal to proceed.  The difference between these two is that `AutoResetEvent` au
 after `Set()` is called, only allowing one thread to proceed, whereas `ManualResetEvent` stays "open"
 for all threads, until manually closed again.
 
+Example:
+```csharp
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+
+class TestThreading
+{
+    static readonly Queue<char> queue = new Queue<char>();
+    static bool finishedProducing = false;
+    static bool done = false;
+
+    static void Main(string[] args)
+    {
+        // Create a consumer.
+        Thread consumerThread = new Thread(() => {
+            while (!done)
+            {
+                ConsumeOne();
+            }
+        });
+        consumerThread.Start();
+
+        // Create some producers.
+        char[] chars1 = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
+        char[] chars2 = new char[10]; for (int i = 0; i < chars2.Length; i++) chars2[i] = '#';
+        Thread t1 = new Thread(() => { foreach (char c in chars1) ProduceOne(c); } );
+        Thread t2 = new Thread(() => { foreach (char c in chars2) ProduceOne(c); } );
+        t1.Start();
+        t2.Start();
+        t1.Join();
+        t2.Join();
+
+        // Signal producing is finished.
+        lock (queue)
+        {
+            finishedProducing = true;
+            Monitor.PulseAll(queue);
+        }
+    }
+
+    static void ProduceOne(char c)
+    {
+        lock (queue)
+        {
+            queue.Enqueue(c);
+            Monitor.PulseAll(queue);
+        }
+    }
+
+    static void ConsumeOne()
+    {
+        lock (queue)
+        {
+            while (queue.Count < 1 && !finishedProducing) Monitor.Wait(queue);
+            if (queue.Count > 0) Console.Write(queue.Dequeue());
+            else done = true;
+        }
+    }
+}
+```
+
 ## Function Pointers / Delegates / Functions as Objects / Callable Objects
 
 ### C++
