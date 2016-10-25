@@ -45,6 +45,20 @@ console.log("Hello world!\n");
 
 ## Console input / output
 
+### Java
+```java
+// import java.util.Scanner;
+System.out.println("Hello world!");
+System.out.print("Hello");
+System.out.printf("The value is %d.", 15);
+Scanner scanner = new Scanner(System.in);
+String lineStr = scanner.nextLine();
+String word = scanner.next();
+int intVal = scanner.nextInt(); // throws InputMismatchException and others
+double doubleVal = scanner.nextDouble(); 
+boolean anotherInt = scanner.hasNextInt(); // hasNextDouble(), hasNext(), hasNextLine() etc. as well
+```
+
 ### C# 
 Console input/output uses the `System.Console` class.  There are two properties that represent standard
 input and output -- `Console.In` (standard input stream as a `System.IO.TextReader`), and `Console.Out`
@@ -55,6 +69,13 @@ typically, methods defined directly in the `Console` class are called.  In parti
 there are overloads that accept many different types to write out.
 
 ## Parsing and Conversions
+
+### Java
+```java
+int myint = Integer.parseInt("15"); // throws NumberFormatException
+Integer myInteger = Integer.valueOf("15"); // throws NumberFormatException
+double mydouble = Double.parseDouble("3.1415");
+```
 
 ### C# 
 ```csharp
@@ -75,6 +96,12 @@ double d = double.Parse("1.234"); // etc.
 uint32_t, uint64_t.  These are optional, if directly supported by an implementation.  They are in the
 std namespace.
 
+### Java
+Primitive boolean: boolean
+Primitive integer: byte, short, int, long
+Primitive floating: float, double
+Primitive character: char
+
 ### C# 
 * Value types: signed integer (sbyte, short, int, long), unsigned integer 
 (byte, ushort, uint, ulong), real (float, double, decimal), logical (bool), 
@@ -89,6 +116,14 @@ when you do not know the type.
 ### C++
 
 In C++, array size must be known at compile time, so size must be a constant expression.
+
+### Java
+```java
+int[] intArr = new int[100];
+int myLength = intArr.length;
+int[] initializedArr = { 2, 4, 6, 8 };
+intArr = new int[3] { 1, 3, 7 };
+```
 
 ### C# 
 Arrays are created with the new keyword, e.g. `int[] myarr = new int[33];`.
@@ -174,6 +209,13 @@ struct MyAggregate // all members public, no initializers, no constructors, no i
 MyAggregate myagg = { 4, "hello" };
 ```
 
+### Java
+```java
+Member and static variables are default initialized, as are array components, to 0 / false / null.
+Local variables are not default initialized, but if not initialized explicitly before they are
+used will cause a compile-time error.
+```
+
 ### C# 
 Local variable are not default initialized, but the compiler enforces
 that they are initialized before they are used.  All other variables are 
@@ -196,6 +238,12 @@ for (auto elem : myvec) {} // elem takes on copies of the elements in myvec
 for (auto &elem : myvec) {} // elem takes on references to the elements in myvec (and can modify them)
 ```
 
+### Java
+```java
+int[] myarr = { 2, 4, 6, 8 };
+for (int i : myarr) System.out.println(i);
+```
+
 ### C# 
 ```csharp
 foreach (char c in "beer")
@@ -204,7 +252,15 @@ foreach (char c in "beer")
 ## Access
 
 ### C++
-In C++, members of `struct` are public by default, and members of `class` are private by default.
+In C++, members of `struct` are public by default, and members of `class` are private by default (this
+is the only difference between these keywords in C++).
+
+### Java
+Access types:
+* `public` -- world accessible
+* `protected` -- accessible by subclasses and by objects in the same package
+* `private` -- only accessible to this class (not even accessible to subclasses)
+* default -- accessible to objects in the same package
 
 ### C# 
 In C\#, members are private by default.
@@ -214,6 +270,10 @@ In C\#, members are private by default.
 ### C++
 In C++, == and != are by default not defined for objects, but you can overload these and the relational
 operators to provide that functionality.  For example, these are overloaded for `string`.
+
+### Java
+For object comparisons, `==` and `!=` always perform reference equality.  To get value equality, classes must
+override `Object`'s `equals(Object other)` method (as well as the `hashCode()` method).
 
 ### C# 
 In C\#, == and != perform value comparison for value types (always). By 
@@ -228,6 +288,10 @@ In C++, by default all parameters are passed by value.  For primitive types, thi
 copy.  For arrays, a copy of the pointer to the first element is passed.  For class types, the copy
 constructor is called to create the copy.  To pass by reference, indicate that the parameter is a 
 reference (with &).
+
+### Java
+All parameters are passed by value.  However, when the value is a reference, you can modify the
+referred to object by using the reference.
 
 ### C# 
 In C\#, by default all parameters are passed by value.  However, the ref
@@ -261,6 +325,81 @@ for (auto iter = myvec.begin(); iter != myvec.end(); iter++) // old-school way t
 	*iter += 10;
 }
 for (auto &elem : myvec) elem += 10; // easier way to do it -- make sure you use a reference, or you'll get a copy
+```
+
+### Java
+```java
+In Java, map / dictionary do not inherit from / implement `Collection`.
+`Collection<E>` utility methods for all collections:
+```java
+Iterator<E> iterator()
+int size()
+boolean contains(Object obj)
+boolean add(Object element)
+boolean remove(Object obj)
+clear()
+<T> T[] toArray(T[] prototypeArray) // can pass in new T[0]
+```
+`Iterator<E>` methods:
+```java
+boolean hasNext()
+E next()
+void remove() // Remove last visited object from the collection
+```
+`Map<K, V>` methods:
+```java
+V put(K key, V value)
+V get(Object key)
+V getOrDefault(Object key, V defaultValue)
+Set<K> keySet()
+Collection<V> values()
+Set<Map.Entry<K, V>> entrySet()
+```
+`List<E>` interface methods:
+```java
+void add(int index, E element)
+void remove(int index)
+E get(int index)
+E set(int index, E element)
+```
+`Queue<E>` interface methods:
+```java
+boolean add (E element) // Add to tail of queue, if queue is full, throws IllegalStateException
+boolean offer (E element) // Add to tail of queue, if queue is full, return false
+E remove() // Returns and removes head element of queue, throw NoSuchElementException if empty
+E poll() // Returns and removes head element of queue, return null if empty
+E peek() // Returns head element without removing it, or null if queue is empty
+```
+`Deque<E>` interface methods:
+```java
+addFirst, addLast, offerFirst, offerLast, removeFirst, removeLast, pollFirst, pollLast, 
+peekFirst, peekLast
+```
+Concrete collection / map classes:
+```java
+ArrayList // implements List
+LinkedList // implements List, Queue, Deque
+HashSet // implements Set
+TreeSet // implements SortedSet, NavigableSet
+ArrayDeque // implements Queue, Deque
+HashMap // implements Map
+TreeMap // implements SortedMap, NavigableMap
+```
+To implement a stack, use a `Deque` with e.g. `offerFirst()`, `pollFirst()`, and `peekFirst()`.
+Examples:
+```java
+Map<String, Integer> map = new HashMap<String, Integer>();
+map.put("one", 1);
+map.put("two", 2);
+for (Map.Entry<String, Integer> entry : map.entrySet())
+{
+    String key = entry.getKey();
+    int value = entry.getValue();
+    // Do something
+}
+map.forEach((key, value) -> {
+    // Do something
+});
 ```
 
 ### C# 
@@ -341,6 +480,51 @@ getLine(cin, s);  // Read in a full line
 s.empty();
 s.size();  // length of the string
 char c = s[0]; // individual character by index
+```
+
+### Java
+```java
+String str1 = "hello!";
+String str2 = str1.substring(1, 3); // "el" (params are beginIndex, endIndex)
+str1.substring(1); // "ello!"
+String str3 = "h" + str2 + "lo"; // "hello"
+str1.equals("Hello!"); // false
+str1.equalsIgnoreCase("Hello!"); // true
+String str4 = "hello!";
+str1 == str4; // false
+str1.length(); // 6
+char ch = str1.charAt(2); // 'l'
+"a".compareTo("b"); // -1
+"b".compareTo("a"); // 1
+"hello".startsWith("he"); // true
+"hello".endsWith("olo"); // false
+"hello".indexOf("l"); // 2
+"hello".indexOf("l", 3); // 3 (second param is from index)
+"hello".indexOf("bee"); // -1
+"hello".lastIndexOf("l"); // 3
+"hello".lastIndexOf("l", 4); // -1 (second param is from index)
+"hello".replace("l", "bb"); // "hebbbbo" (replaces all occurrences)
+"ab".toUpperCase(); // "AB"
+"Ab".toLowerCase(); // "ab"
+"   hello \r\n".trim(); // "hello"
+// String join(CharSequence delimiter, CharSequence... elements); // Join w/ delimiter
+// String, StringBuffer, and StringBuilder implement CharSequence
+```
+`StringBuilder` methods:
+```java
+// Basic usage:
+StringBuilder sb = new StringBuilder();
+sb.append('h');
+sb.append("ello");
+sb.toString(); // "hello"
+
+// Methods:
+append(String str)
+append(char c)
+setCharAt(int i, char c)
+insert(int offset, String str)
+insert(int offset, char c)
+delete(int startIndex, int endIndex)
 ```
 
 ### C# 
