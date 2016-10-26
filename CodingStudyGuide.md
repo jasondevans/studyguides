@@ -412,7 +412,11 @@ void sort(List list) // Sort, elements must implement Comparable
 <T extends Comparable<? super T>> T max(Collection<T> collection)
 <T> min(Collection<T> collection, Comparator<? super T> c)
 <T> max(Collection<T> collection, Comparator<? super T> c)
-Collections.shuffle(List list) // Randomly permute list
+void shuffle(List list) // Randomly permute list
+<T extends Comparable<? super T>> int binarySearch(List<T> list, T key) // returns index, or negative # if not found
+<T> int binarySearch(List<T> list, Comparator<? super T> c) // returns index, or negative # if not found
+void swap(List<?> list, int index1, int index2)
+void reverse(List<?> list)
 ```
 
 ### C# 
