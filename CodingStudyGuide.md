@@ -210,11 +210,9 @@ MyAggregate myagg = { 4, "hello" };
 ```
 
 ### Java
-```java
 Member and static variables are default initialized, as are array components, to 0 / false / null.
 Local variables are not default initialized, but if not initialized explicitly before they are
 used will cause a compile-time error.
-```
 
 ### C# 
 Local variable are not default initialized, but the compiler enforces
@@ -328,8 +326,7 @@ for (auto &elem : myvec) elem += 10; // easier way to do it -- make sure you use
 ```
 
 ### Java
-```java
-In Java, map / dictionary do not inherit from / implement `Collection`.
+In Java, map / dictionary do not inherit from / implement `Collection`, but rather `Map`.
 `Collection<E>` utility methods for all collections:
 ```java
 Iterator<E> iterator()
@@ -400,6 +397,22 @@ for (Map.Entry<String, Integer> entry : map.entrySet())
 map.forEach((key, value) -> {
     // Do something
 });
+```
+Algorithms:
+```java
+void list.sort(Comparator c) // Sort with given comparator
+Comparator.reverseOrder() // Returns a comparator that reverses natural order
+Comparator.comparingDouble(MyClass::getMyField) // A comparator that compares based on instance method
+comparator.reversed() // a reversed version of this comparator
+```
+`Collections` static methods:
+```java
+void sort(List list) // Sort, elements must implement Comparable
+<T extends Comparable<? super T>> T min(Collection<T> collection)
+<T extends Comparable<? super T>> T max(Collection<T> collection)
+<T> min(Collection<T> collection, Comparator<? super T> c)
+<T> max(Collection<T> collection, Comparator<? super T> c)
+Collections.shuffle(List list) // Randomly permute list
 ```
 
 ### C# 
@@ -529,7 +542,7 @@ delete(int startIndex, int endIndex)
 
 ### C# 
 In C#, `char`'s are natively stored as 16-bit UTF-16 values. String type is `string`, which is a reference
-type.  Operators == and != are overridden to do value comparison (ordinal).  You can access individual characters (as
+type.  Operators == and != are overloaded to do value comparison (ordinal).  You can access individual characters (as
 long as they fit in a single 16-bit character) with [] indexing.  Some useful string methods include 
 `StartsWith`, `Substring`, and `Replace`.  `CompareTo` perfoms "culture-sensitive" (non-ordinal) comparison.
 ```csharp
