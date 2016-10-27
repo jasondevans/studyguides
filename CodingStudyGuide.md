@@ -474,7 +474,73 @@ bool found = dt.TryGetValue("orange", out result);
 foreach(string s in dt.Keys) {}
 foreach(int i in dt.Values) {}
 foreach(KeyValuePair<string, int> kv in dt) 
-	Console.WriteLine(kv.Key + ": " + kv.Value);
+    Console.WriteLine(kv.Key + ": " + kv.Value);
+```
+
+Algorithms:
+```csharp
+Array.Sort<T>(T[]) // Basic comparison
+Array.Sort<T>(T[], IComparer<T>) // Use the given comparer for ordering
+Array.Sort<T>(T[], Comparison<T>) // Use the given comparison, easiest way to use a lambda
+List<T>.Sort() // Instance method, uses default comparer
+List<T>.Sort(IComparer<T>) // Instance method, uses given comparer
+List<T>.Sort(Comparison<T>) // Instance method, easiest way to use a lambda
+```
+
+## Equality and Comparison
+
+C# 
+
+### Equality
+
+Object equality / hash code methods:
+```csharp
+public virtual bool Equals(object obj); // Instance method
+public static bool Equals(object obj1, object obj2); // Static method, can handle null
+
+// If you override Equals, you should also override GetHashCode, and vice versa.
+public virtual int GetHashCode();
+```
+
+IEqualityComparer / IEqualityComparer<T> interfaces:
+```csharp
+public interface IEqualityComparer {
+    bool Equals(object x, object y);
+    int GetHashCode(object obj);
+}
+public interface IEqualityComparer<T> {
+    bool Equals(T x, T y);
+    int GetHashCode(T obj);
+}
+
+// An abstract class you can subtype that implements both:
+public abstract class EqualityComparer<T> : IEqualityComparer, IEqualityComparer<T> {
+    public abstract bool Equals(T x, T y); // You only need implement this and the following method.
+    public abstract int GetHashCode(T obj);
+
+    // Explicit implementation of non-generic IEqualityComparer goes here.
+
+    public static EqualityComparer<T> Default { get; }
+}
+```
+
+### Comparison
+
+IComparer / IComparer<T> interfaces:
+```csharp
+public interface IComparer { int Compare(object x, object y); }
+public interface IComparer <in T> { int Compare(T x, T y); }
+
+// An abstract class that you can subtype that implements both:
+public abstract class Comparer<T> : IComparer, IComparer<T> {
+    public static Comparer<T> Default { get; }
+    public abstract int Compare(T x, T y); // You only have to implement this method
+    int IComparer.Compare(object x, object y); // Explicit implementation of this IComparer method
+}
+
+// Use this to create an IComparer<T> from a lambda, where Comparison<T> is defined
+// as: public delegate int Comparison<in T>(T x, T y);
+public static Comparer<T> Comparer<T>.Create(Comparison<T> comparison);
 ```
 
 ## String Manipulation
