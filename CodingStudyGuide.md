@@ -401,10 +401,32 @@ map.forEach((key, value) -> {
 Algorithms:
 ```java
 void list.sort(Comparator c) // Sort with given comparator
-Comparator.reverseOrder() // Returns a comparator that reverses natural order
-Comparator.comparingDouble(MyClass::getMyField) // A comparator that compares based on instance method
-comparator.reversed() // a reversed version of this comparator
 ```
+
+Comparators / Comparable:
+
+```java
+// Comparable compare method:
+int compareTo(T other)
+
+// Comparator compare method:
+int compare(T o1, T o2)
+
+// Comparator-returning static methods:
+Comparator.comparing(Function<? super T, ? extends U> keyExtractor)
+Comparator.comparing(Function<? super T, ? extends U> keyExtractor, Comparator<? super U> comparator)
+Comparator.comparingInt(ToIntFunction<? super T> keyExtractor) // same for long and double
+Comparator.naturalOrder()
+Comparator.reverseOrder()
+Comparator.nullsFirst(Comparator<? super T> comparator)
+
+// Comparator-returning instance methods:
+Comparator.reversed() 
+Comparator.thenComparing(Function<? super T, ? extends U> keyExtractor) 
+Comparator.thenComparing(Function<? super T, ? extends U> keyExtractor, Comparator<? super U> comparator) 
+Comparator.thenComparingInt(ToIntFunction<? super T> keyExtractor) // same for long and double
+```
+
 `Collections` static methods:
 ```java
 void sort(List list) // Sort, elements must implement Comparable
@@ -747,6 +769,133 @@ mutex manually.  Condition variables, `std::condition_variable` have methods `wa
 and `notify_all()`.  Finally, there are atomics, with `std::atomic<type>`, with methods `store()`
 and `load()`.
 
+### Java
+
+#### Memory Model
+
+All writes are guaranteed to be atomic, except for `long` and `double`.  64-bit references are 
+guaranteed to be atomic.  Memory update order is NOT guaranteed between threads by default.
+
+#### Volatile
+
+The `volatile` keyword ensures memory consistency and happens-before for reads/writes across threads.
+
+#### Atomics
+
+Atomics provide everything `volatile` provides, plus the ability to atomically update a variable.
+On platforms that support it (i.e. that support "compare and swap" in hardware), it can do this
+without locking.
+
+```java
+// Basic atomics:
+AtomicInteger, AtomicLong, AtomicDouble, AtomicReference<V>
+
+// Basic AtomicReference<V> methods:`
+V accumulateAndGet(V x, BinaryOperator<V> accumulatorFunction)
+V getAndAccumulate(V x, BinaryOperator<V> accumulatorFunction)
+V getAndUpdate(UnaryOperator<V> updateFunction)
+boolean compareAndSet(V expect, V update)
+V get()
+void set(V newValue)
+
+// Basic AtomicInteger methods:
+int accumulateAndGet(int x, IntBinaryOperator accumulatorFunction)
+int getAndAccumulate(int x, IntBinaryOperator accumulatorFunction)
+int getAndUpdate(IntUnaryOperator updateFunction)
+int getAndAdd(int delta)
+int getAndIncrement()
+boolean compareAndSet(int expect, int update)
+int get()
+void set(int newValue)
+```
+
+#### Basic Concurrency Interfaces
+
+```java
+// Runnable
+public void run()
+
+// Callable<T>
+V call() throws Exception
+
+// Future<T>
+boolean cancel(boolean mayInterruptIfRunning)
+boolean isCancelled()
+boolean isDone()
+V get() // throws several exceptions
+V get(long timeout, TimeUnit unit)
+```
+
+#### Utility Classes
+
+```java
+// ConcurrentHashMap<K, V> implements ConcurrentMap<K, V>:
+V putIfAbsent(K key, V value);
+boolean remove(K key, V value);  // Remove only if K is mapped to V
+boolean replace(K key, V oldVaue, V newValue); // Replace only if K is mapped to oldValue
+V replace(K key, V newValue); // Replace only if K is already mapped to some value
+
+// CopyOnWriteArrayList<T>
+
+// BlockingQueue<T>
+// ArrayBlockingQueue, LinkedBlockingQueue, PriorityBlockingQueue
+put(V element) // Blocks until there is room in the queue
+V take() // Blocks until there is an element in the queue to take
+
+// BlockingDeque<T>
+// LinkedBlockingDeque
+
+// CountDownLatch
+
+// FutureTask<T>
+
+// Semaphore
+
+// CyclicBarrier
+
+// CompletableFuture<T>
+boolean complete(T value)
+boolean completeExceptionally(Throwable t)
+T get()
+T get(long timeout, TimeUnit unit)
+T join() // get() and join() are very similar, with some subtle difference in exception handling
+boolean isCompletedExceptionally()
+boolean isDone()
+thenAccept(Consumer<? super T> action)
+thenApply(Function<? super T, ? extends U> function)
+thenRun(Runnable action)
+CompletableFuture.supplyAsync(Supplier<U> supplier)
+CompletableFuture.supplyAsync(Supplier<U> supplier, Executor executor)
+```
+
+#### Executors
+
+```java
+// Executor
+void execute(Runnable runnable)
+
+// ExecutorService
+void shutdown()
+List<Runnable> shutdownNow()
+boolean isShutdown()
+boolean isTerminated()
+boolean awaitTerminator(long timeout, TimeUnit unit) throws InterruptedException
+Future<T> submit(Callable<T> task)
+Future<?> submit(Runnable task)
+
+// ScheduledExecutorService
+ScheduledFuture<V> schedule(Callable callable, long delay, TimeUnit unit)
+ScheduledFuture<?> schedule(Runnable task, long delay, TimeUnit unit)
+ScheduledFuture<?> scheduleAtFixedRate(Runnable task, long initialDelay, long period, TimeUnit unit)
+ScheduledFuture<?> scheduleWithFixedDelay(Runnable task, long initialDelay, long delay, TimeUnit unit)
+
+// Executors static methods:
+Executors.newFixedThreadPool(int numThreads)
+Executors.newCachedThreadPool()
+Executors.newSingleThreadExecutor()
+Executors.newScheduledThreadPool(int numThreads)
+```
+
 ### C# 
 Create and run a basic thread with:
 ```csharp
@@ -924,3 +1073,112 @@ MyGen<int> mygenint = new MyGen<int>();
 ```
 
 ## Values, References, Pointers, Memory Management, Garbage Collection
+
+## Java Streams
+
+### Creating Streams
+
+```java
+Collection.stream() // instance method
+Collection.parallelStream() // instance method
+Stream<T> Stream.of(T first, T... rest)
+IntStream is = Arrays.stream(array_of_ints) // etc.
+Stream<T> s = Arrays.stream(array_of_T)
+Stream.iterate(T initialVal, UnaryOperator<T> fn)
+IntStream.iterate(int initialVal, IntUnaryOperator fn) // etc.
+Stream.generate(Supplier<T>)
+```
+
+### Numeric Primitive Streams
+
+```java
+IntStream
+DoubleStream
+LongStream
+Stream.mapToInt(...) // etc. (instance method)
+IntStream.mapToObj(...) // etc. (instance method)
+IntStream.boxed() // etc. (instance method)
+InStream.sum() // etc. (instance method)
+IntStream IntStream.range(int from, int to) // etc., exclusive end
+IntStream IntSTream.rangeClosed(int from, int to) // etc., inclusive end
+```
+
+### Stream Intermediate Operations
+
+```java
+filter(Predicate<? super T> predicate)
+map(Function<? super T, ? extends R> mapper>)
+flatMap(Function<? super T, ? extends Stream<? extends R>> mapper)
+limit(long maxSize)
+skip(long num)
+sorted()
+sorted(Comparator<? super T> comparator)
+distinct()
+```
+
+### Stream Terminal Operations
+
+```java
+forEach(Consumer<T>)
+count()
+collect(Collector<? super T, A, R>)
+collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner)
+boolean anyMatch(Predicate<? super T> predicate)
+boolean allMatch(Predicate<? super T> predicate)
+Optional<T> findFirst()
+Optional<T> findAny()
+T reduce(T initialVal, BinaryOperator<T> combiner)
+```
+
+### Collectors
+
+```java
+List<T> Collectors.toList()
+Set<T> Collectors.toSet()
+Long Collectors.counting()
+Integer Collectors.summingInt()
+Double Collectors.averagingInt()
+String Collectors.joining(String delimiter)
+Map<K, List<T>> Collectors.groupingBy(Function<? super T, ? extends K> classifier)
+```
+
+### Optional<T> Operations
+
+```java
+boolean isPresent()
+ifPresent(Consumer<T> consumer)
+T get() // throws NoSuchElementException if not present
+T orElse(T other) // gets the value, or returns other if not present
+OptionalInt
+OptionalLong
+OptionalDouble
+```
+
+## Files
+
+### Java 
+
+Two main entry points for file I/O are `Paths`/`Path` and `Files`
+
+```java
+Path path = Paths.get("C:\\MyDir\\MySubDir")
+
+try (BufferedReader reader = Files.newBufferedReader(path, Charset.forName("UTF-8"))
+{
+    String line = null;
+    while ((line = reader.readLine()) != null)
+    {
+        System.out.println(line);
+    }
+}
+catch (IOException ioex)
+{
+    System.err.format("IO Exception: %s\n", ioex);
+}
+
+try (PrintWriter writer = new PrintWriter(Files.newBufferedWriter(path, Charset.forName("UTF-8")))
+{
+    writer.println("hello");
+    writer.format("This is an integer: %d\n", 55);
+} catch (IOException ioex) { /* handle */ }
+```
