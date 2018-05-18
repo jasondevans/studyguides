@@ -18,7 +18,37 @@ details that are not specified.
 
 ### Dictionary
 
-### Graph
+### Undirected Graph
+
+An _undirected graph_ is a set of vertices and a collection of edges that each connect a pair of vertices.
+
+Some terms:
+
+**Path**: A sequence of verices connected by edges
+
+**Simple path**: A path with no repeated vertices
+
+**Cycle**: A path with at least one edge whose first and last vertices are the same
+
+**Simple cycle**: A cycle with no repeated edges or vertices (except first / last vertex)
+
+**Length** (of a path or cycle): Its number of edges
+
+**Connected**: Two vertices are _connected_ if there exists a path that contains them both.  A graph is _connected_ if there is a path from every vertex to every other vertex in the graph.
+
+**Connected component**: Within a graph that is not connected, there is a set of maximally connected subgraphs called _connected components_.  Actually, I suppose a connected graph also has a single connected component.
+
+**Tree**: An acyclic connected graph
+
+**Forest**: A disjoint set of trees
+
+**Spanning tree**: A subgraph of a connected graph that contains all of the graph's vertices and is a single tree
+
+**Spanning forest**: The union of spanning trees of a graph's connected components
+
+**Density**: The proportion of possible pairs of vertices that are connected by edges
+
+**Bipartite graph**: A graph whose vertices can be divided into two sets such that all edges connect a vertex in one set to a vertex in the other set
 
 ## Data Structures
 
