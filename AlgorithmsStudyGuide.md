@@ -105,6 +105,10 @@ And Suffix Tree
 
 ### Union Find
 
+## Problems
+
+Problems go here -- such as "minimum spanning tree" etc.  Time will tell if this is a useful category.
+
 ## Algorithms
 
 ### Sorting
